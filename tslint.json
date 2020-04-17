@@ -1,0 +1,19 @@
+{
+    "defaultSeverity": "error",
+    "extends": ["tslint:recommended"],
+    "linterOptions": {
+        "exclude": [
+            "config/**/*.js",
+            "node_modules/**/*.ts",
+            "coverage/lcov-report/*.js"
+        ]
+    },
+    "rules": {
+        "trailing-comma": [false],
+        "no-console": false
+    },
+    "jsRules": {
+        "no-console": false
+    },
+    "rulesDirectory": []
+}
