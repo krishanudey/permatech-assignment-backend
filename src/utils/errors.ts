@@ -19,3 +19,34 @@ export class ArgumentFormatException extends Error {
         );
     }
 }
+
+export class NotFoundException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+export class NetworkDeviceNotFoundException extends NotFoundException {
+    constructor() {
+        super(`Device not found on network!!!`);
+    }
+}
+
+export class UnknownDeviceException extends Error {
+    constructor() {
+        super(`Oops! We don't know how to talk to this device!`);
+    }
+}
+
+export class DeviceAlreadyAddedException extends Error {
+    constructor() {
+        super(`Oops! Looks like you already added this device!`);
+    }
+}
+
+export class DuplicateDeviceNameException extends Error {
+    constructor() {
+        super(
+            `Oops! Looks like you already used this name for another device!`
+        );
+    }
+}
