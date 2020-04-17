@@ -10,7 +10,9 @@
     },
     "rules": {
         "trailing-comma": [false],
-        "no-console": false
+        "no-console": false,
+        "no-namespace": false,
+        "max-classes-per-file": false
     },
     "jsRules": {
         "no-console": false
