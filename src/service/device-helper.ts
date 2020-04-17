@@ -3,67 +3,13 @@ import {
     OutOfRangeException,
     IlligalArgumentException,
     ArgumentFormatException,
+    NetworkDeviceNotFoundException,
+    UnknownDeviceException,
 } from "../utils/errors";
 import { isValidColorString } from "../utils/validators";
 
-const MOCK_DEVICES: NetworkDevice[] = [
-    {
-        type: "AC",
-        ip: "192.168.1.33",
-        servicePort: 10203,
-        uuid: "",
-    },
-    {
-        type: "AC",
-        ip: "192.168.1.34",
-        servicePort: 10203,
-        uuid: "",
-    },
-    {
-        type: "TV",
-        ip: "192.168.1.35",
-        servicePort: 80,
-        uuid: "",
-    },
-    {
-        type: "Light",
-        ip: "192.168.1.36",
-        servicePort: 3001,
-        uuid: "",
-    },
-    {
-        type: "Light",
-        ip: "192.168.1.37",
-        servicePort: 3001,
-        uuid: "",
-    },
-    {
-        type: "Light",
-        ip: "192.168.1.38",
-        servicePort: 3001,
-        uuid: "",
-    },
-    {
-        type: "Light",
-        ip: "192.168.1.39",
-        servicePort: 3001,
-        uuid: "",
-    },
-];
-
-export class DeviceHelper {
-    async findDevices(): Promise<NetworkDevice[]> {
-        await wait(5 * 1000);
-        return MOCK_DEVICES;
-    }
-
-    getDeviceConnection(uuid: string) {
-        return;
-    }
-}
-
 export interface NetworkDevice {
-    type: "AC" | "TV" | "Light";
+    type: DeviceType;
     ip: string;
     servicePort: number;
     uuid: string;
@@ -259,6 +205,11 @@ export class SmartLight extends SmartDevice {
     }
 }
 
+export enum DeviceType {
+    "AC" = "AC",
+    "TV" = "TV",
+    "Light" = "Light",
+}
 export enum PowerState {
     "ON" = "ON",
     "OFF" = "OFF",
@@ -283,7 +234,6 @@ export enum AcSwing {
     "AUTO" = "AUTO",
     "OFF" = "OFF",
 }
-
 export enum TvKeys {
     "Num1" = "Num1",
     "Num2" = "Num2",
@@ -319,3 +269,79 @@ export enum TvKeys {
     "Forward" = "Forward",
     "TvPower" = "TvPower",
 }
+
+const MOCK_DEVICES: NetworkDevice[] = [
+    {
+        type: DeviceType.AC,
+        ip: "192.168.1.33",
+        servicePort: 10203,
+        uuid: "",
+    },
+    {
+        type: DeviceType.AC,
+        ip: "192.168.1.34",
+        servicePort: 10203,
+        uuid: "",
+    },
+    {
+        type: DeviceType.AC,
+        ip: "192.168.1.35",
+        servicePort: 80,
+        uuid: "",
+    },
+    {
+        type: DeviceType.Light,
+        ip: "192.168.1.36",
+        servicePort: 3001,
+        uuid: "",
+    },
+    {
+        type: DeviceType.Light,
+        ip: "192.168.1.37",
+        servicePort: 3001,
+        uuid: "",
+    },
+    {
+        type: DeviceType.Light,
+        ip: "192.168.1.38",
+        servicePort: 3001,
+        uuid: "",
+    },
+    {
+        type: DeviceType.Light,
+        ip: "192.168.1.39",
+        servicePort: 3001,
+        uuid: "",
+    },
+];
+
+export class DeviceHelper {
+    async findDevices(): Promise<NetworkDevice[]> {
+        await wait(5 * 1000);
+        return MOCK_DEVICES;
+    }
+
+    async getDeviceConnection(uuid: string): Promise<SmartDevice> {
+        // Mock device search on network
+        await wait(1000);
+        const nd = MOCK_DEVICES.find((el) => el.uuid === uuid);
+        if (!nd) {
+            throw new NetworkDeviceNotFoundException();
+        }
+
+        // Mock connection establish attempt
+        await wait(1000);
+        switch (nd.type) {
+            case "AC":
+                return new SmartAC(nd);
+            case "Light":
+                return new SmartAC(nd);
+            case "TV":
+                return new SmartAC(nd);
+            default:
+                throw new UnknownDeviceException();
+        }
+    }
+}
+
+export const DeviceHelperInstance = new DeviceHelper();
