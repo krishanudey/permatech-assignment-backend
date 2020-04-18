@@ -5,18 +5,19 @@ import * as Joi from "@hapi/joi";
 import {
     DeviceAlreadyAddedException,
     DuplicateDeviceNameException,
+    NotFoundException,
 } from "../utils/errors";
 import { HTTP_API_ERROR_CODE } from "../utils/custom-error-codes";
-
+const nameValidator = Joi.string()
+    .regex(/^[a-zA-Z0-9 ']*$/)
+    .min(3)
+    .max(30)
+    .required()
+    .messages({
+        regex: `"name" can only contain letters, numbers, spaces and apostrophe (')`,
+    });
 const addDeviceSchema = Joi.object().keys({
-    name: Joi.string()
-        .regex(/^[a-zA-Z0-9 ']*$/)
-        .min(3)
-        .max(30)
-        .required()
-        .messages({
-            regex: `"name" can only contain letters, numbers, spaces and apostrophe (')`,
-        }),
+    name: nameValidator,
     uuid: Joi.string().uuid().required(),
     type: Joi.string()
         .valid(...Object.keys(DeviceType))
@@ -181,5 +182,52 @@ export const removeDeviceFromDb = (
             reason: HTTP_API_ERROR_CODE.INTERNAL_SERVER_ERROR,
             message: err.message,
         });
+    }
+};
+
+export const updateDeviceInDb = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const uuid = req.params.uuid;
+    const name = req.body.name;
+    try {
+        if (!uuid) {
+            return res.status(400).json({
+                reason: HTTP_API_ERROR_CODE.VALIDATION_FAILED,
+                message: "UUID not provided!!!",
+            });
+        }
+        const validationResult = nameValidator.validate(name);
+        if (validationResult.error) {
+            return res.status(400).json({
+                reason: HTTP_API_ERROR_CODE.VALIDATION_FAILED,
+                message: validationResult.error.message,
+                details: validationResult.error.details,
+            });
+        }
+
+        const d = DatabaseInstance.updateDevice(uuid, { name });
+        return res.json({ message: "Device updated successfully", device: d });
+    } catch (err) {
+        if (err instanceof NotFoundException) {
+            res.status(400).json({
+                reason: HTTP_API_ERROR_CODE.NOT_FOUND,
+                message: err.message,
+                details: { name, uuid },
+            });
+        } else if (err instanceof DuplicateDeviceNameException) {
+            res.status(400).json({
+                reason: HTTP_API_ERROR_CODE.DUPLICATE_DEVICE_NAME,
+                message: err.message,
+                details: { name, uuid },
+            });
+        } else {
+            res.status(500).json({
+                reason: HTTP_API_ERROR_CODE.INTERNAL_SERVER_ERROR,
+                message: err.message,
+            });
+        }
     }
 };
