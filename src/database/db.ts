@@ -80,6 +80,23 @@ export class Database {
         this.saveDB();
         return d;
     }
+    updateDevice(uuid: string, props: { name: string }) {
+        let d: DeviceConfig;
+
+        d = this.getDeviceByName(props.name);
+        if (d && d.deviceMeta.uuid !== uuid) {
+            throw new DuplicateDeviceNameException();
+        }
+
+        d = this.getDeviceByUuid(uuid);
+        if (!d) {
+            throw new NotFoundException(`No device saved with UUID: ${uuid}`);
+        }
+
+        d.name = props.name;
+        this.saveDB();
+        return d;
+    }
     removeDeviceByUuid(uuid: string) {
         const deviceIndex = this.state.devices.findIndex(
             (d) => d.deviceMeta.uuid === uuid
@@ -90,7 +107,9 @@ export class Database {
         return this.removeDeviceAt(deviceIndex);
     }
     removeDeviceByName(name: string) {
-        const deviceIndex = this.state.devices.findIndex((d) => d.name === name);
+        const deviceIndex = this.state.devices.findIndex(
+            (d) => d.name === name
+        );
         if (deviceIndex < 0) {
             throw new NotFoundException("Device is not added to database yet!");
         }
