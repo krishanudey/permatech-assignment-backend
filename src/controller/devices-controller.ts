@@ -18,7 +18,7 @@ const addDeviceSchema = Joi.object().keys({
     servicePort: Joi.number().min(1).max(65535).required(),
 });
 
-export const findDevices = async (
+export const discoverDevicesOnNetwork = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -40,7 +40,7 @@ export const findDevices = async (
     }
 };
 
-export const getAllDevices = (
+export const getAllDevicesFromDb = (
     req: Request,
     res: Response,
     next: NextFunction
@@ -56,7 +56,7 @@ export const getAllDevices = (
     }
 };
 
-export const getDeviceByUuid = (
+export const getDeviceByUuidFromDb = (
     req: Request,
     res: Response,
     next: NextFunction
@@ -86,7 +86,7 @@ export const getDeviceByUuid = (
     }
 };
 
-export const getDeviceByName = (
+export const getDeviceByNameFromDb = (
     req: Request,
     res: Response,
     next: NextFunction
@@ -109,7 +109,11 @@ export const getDeviceByName = (
     }
 };
 
-export const addDevice = (req: Request, res: Response, next: NextFunction) => {
+export const addDeviceToDb = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     const validationResult = addDeviceSchema.validate(req.body);
     if (validationResult.error) {
         return res.status(400).json({
@@ -150,7 +154,7 @@ export const addDevice = (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export const removeDevice = (
+export const removeDeviceFromDb = (
     req: Request,
     res: Response,
     next: NextFunction
