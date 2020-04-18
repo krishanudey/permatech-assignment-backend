@@ -284,7 +284,7 @@ const MOCK_DEVICES: NetworkDevice[] = [
         uuid: "4e1cb033-d3c1-4a2d-8f0c-9cbce2a129c9",
     },
     {
-        type: DeviceType.AC,
+        type: DeviceType.TV,
         ip: "192.168.1.35",
         servicePort: 80,
         uuid: "3a96dede-481e-4a54-992d-6f6580185902",

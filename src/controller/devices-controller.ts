@@ -9,7 +9,14 @@ import {
 import { HTTP_API_ERROR_CODE } from "../utils/custom-error-codes";
 
 const addDeviceSchema = Joi.object().keys({
-    name: Joi.string().alphanum().min(3).max(30).required(),
+    name: Joi.string()
+        .regex(/^[a-zA-Z0-9 ']*$/)
+        .min(3)
+        .max(30)
+        .required()
+        .messages({
+            regex: `"name" can only contain letters, numbers, spaces and apostrophe (')`,
+        }),
     uuid: Joi.string().uuid().required(),
     type: Joi.string()
         .valid(...Object.keys(DeviceType))
