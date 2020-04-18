@@ -4,7 +4,7 @@ export class OutOfRangeException extends Error {
     }
 }
 
-export class IlligalArgumentException extends Error {
+export class InvalidArgumentException extends Error {
     constructor(values: string[]) {
         super(`Invalid value. Value must be any of [${values.join(", ")}]`);
     }
@@ -16,6 +16,14 @@ export class ArgumentFormatException extends Error {
             `Invalid format of value. Format must be any of [${formats.join(
                 ", "
             )}]`
+        );
+    }
+}
+
+export class InvalidActionException extends Error {
+    constructor(action: string) {
+        super(
+            `Invalid Operation!!! Action "${action}" does not exist in current context!`
         );
     }
 }

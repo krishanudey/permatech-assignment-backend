@@ -1,7 +1,8 @@
 import express from "express";
 import { AcMode } from "./service/device-helper";
 import bodyParser from "body-parser";
-import { devicesRouter } from "./routes/devices-router";
+import { devicesRouter } from "./routes/devices-info-router";
+import { actionsRouter } from "./routes/device-action-router";
 const app = express();
 const port = process.env.PORT || 8080;
 app.use(bodyParser.json());
@@ -12,6 +13,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/devices", devicesRouter);
+app.use("/api/v1/actions", actionsRouter);
 
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`);

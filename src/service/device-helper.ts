@@ -1,10 +1,11 @@
 import { wait } from "../utils/wait";
 import {
     OutOfRangeException,
-    IlligalArgumentException,
+    InvalidArgumentException,
     ArgumentFormatException,
     NetworkDeviceNotFoundException,
     UnknownDeviceException,
+    InvalidActionException,
 } from "../utils/errors";
 import { isValidColorString } from "../utils/validators";
 
@@ -16,8 +17,29 @@ export interface NetworkDevice {
 }
 
 export abstract class SmartDevice {
+    protected actions: {
+        [key: string]: (
+            args: any
+            // | PowerState
+            // | number
+            // | AcMode
+            // | AcSwing
+            // | AcFanSpeed
+            // | TvKeys
+            // | string
+        ) => Promise<boolean>;
+    } = {};
     constructor(protected networkDevice: NetworkDevice) {}
-    abstract setPowerState(state: PowerState): Promise<PowerState>;
+    abstract setPowerState(state: PowerState): Promise<boolean>;
+
+    performAction(action: string, args?: any): Promise<boolean> {
+        if (!this.actions[action]) {
+            throw new InvalidActionException(action);
+        }
+        return this.actions[action].call(this, args);
+    }
+
+    abstract getState(): any;
 }
 
 export class SmartAC extends SmartDevice {
@@ -37,56 +59,65 @@ export class SmartAC extends SmartDevice {
             swing: AcSwing.AUTO,
             powerState: PowerState.OFF,
         };
+        this.actions.setTemperature = this.setTemperature;
+        this.actions.setMode = this.setMode;
+        this.actions.setFanSpeed = this.setFanSpeed;
+        this.actions.setSwing = this.setSwing;
+        this.actions.setPowerState = this.setPowerState;
     }
 
-    async setTemperature(temp: number): Promise<number> {
-        if (temp < 18 || temp > 32) {
+    getState() {
+        return this.state;
+    }
+
+    async setTemperature(temp: number): Promise<boolean> {
+        if (!temp || temp < 18 || temp > 32) {
             throw new OutOfRangeException(18, 32);
         }
         // Mock device communication
         await wait(300);
         this.state.temp = temp;
-        return temp;
+        return true;
     }
 
-    async setMode(mode: AcMode): Promise<AcMode> {
-        if (!mode) {
-            throw new IlligalArgumentException(Object.keys(AcMode));
+    async setMode(mode: AcMode): Promise<boolean> {
+        if (!mode || !AcMode[mode]) {
+            throw new InvalidArgumentException(Object.keys(AcMode));
         }
         // Mock device communication
         await wait(300);
         this.state.mode = mode;
-        return mode;
+        return true;
     }
 
-    async setFanSpeed(speed: AcFanSpeed): Promise<AcFanSpeed> {
-        if (!speed) {
-            throw new IlligalArgumentException(Object.keys(AcFanSpeed));
+    async setFanSpeed(speed: AcFanSpeed): Promise<boolean> {
+        if (!speed || !AcFanSpeed[speed]) {
+            throw new InvalidArgumentException(Object.keys(AcFanSpeed));
         }
         // Mock device communication
         await wait(300);
         this.state.fanSpeed = speed;
-        return speed;
+        return true;
     }
 
-    async setSwing(swing: AcSwing): Promise<AcSwing> {
-        if (!swing) {
-            throw new IlligalArgumentException(Object.keys(AcSwing));
+    async setSwing(swing: AcSwing): Promise<boolean> {
+        if (!swing || !AcSwing[swing]) {
+            throw new InvalidArgumentException(Object.keys(AcSwing));
         }
         // Mock device communication
         await wait(300);
         this.state.swing = swing;
-        return swing;
+        return true;
     }
 
-    async setPowerState(state: PowerState): Promise<PowerState> {
-        if (!state) {
-            throw new IlligalArgumentException(Object.keys(PowerState));
+    async setPowerState(state: PowerState): Promise<boolean> {
+        if (!state || !PowerState[state]) {
+            throw new InvalidArgumentException(Object.keys(PowerState));
         }
         // Mock device communication
         await wait(300);
         this.state.powerState = state;
-        return state;
+        return true;
     }
 }
 
@@ -103,10 +134,18 @@ export class SmartTV extends SmartDevice {
             volume: 35,
             isMuted: false,
         };
+        this.actions.setVolume = this.setVolume;
+        this.actions.toggleMute = this.toggleMute;
+        this.actions.setPowerState = this.setPowerState;
+        this.actions.keyPress = this.keyPress;
+    }
+
+    getState() {
+        return this.state;
     }
 
     async setVolume(vol: number): Promise<boolean> {
-        if (vol < 0 || vol > 100) {
+        if (!vol || vol < 0 || vol > 100) {
             throw new OutOfRangeException(0, 100);
         }
         // Mock device communication
@@ -122,19 +161,19 @@ export class SmartTV extends SmartDevice {
         return this.state.isMuted;
     }
 
-    async setPowerState(state: PowerState): Promise<PowerState> {
-        if (!state) {
-            throw new IlligalArgumentException(Object.keys(PowerState));
+    async setPowerState(state: PowerState): Promise<boolean> {
+        if (!state || !PowerState[state]) {
+            throw new InvalidArgumentException(Object.keys(PowerState));
         }
         // Mock device communication
         await wait(300);
         this.state.powerState = state;
-        return state;
+        return true;
     }
 
     async keyPress(key: TvKeys): Promise<boolean> {
-        if (!key) {
-            throw new IlligalArgumentException(Object.keys(TvKeys));
+        if (!key || !TvKeys[key]) {
+            throw new InvalidArgumentException(Object.keys(TvKeys));
         }
 
         switch (key) {
@@ -172,10 +211,17 @@ export class SmartLight extends SmartDevice {
             color: "#FFFFFF",
             brightness: 75,
         };
+
+        this.actions.setBrightness = this.setBrightness;
+        this.actions.setColor = this.setColor;
+        this.actions.setPowerState = this.setPowerState;
     }
 
+    getState() {
+        return this.state;
+    }
     async setBrightness(brightness: number): Promise<boolean> {
-        if (brightness < 0 || brightness > 100) {
+        if (!brightness || brightness < 0 || brightness > 100) {
             throw new OutOfRangeException(0, 100);
         }
         // Mock device communication
@@ -194,14 +240,14 @@ export class SmartLight extends SmartDevice {
         return true;
     }
 
-    async setPowerState(state: PowerState): Promise<PowerState> {
-        if (!state) {
-            throw new IlligalArgumentException(Object.keys(PowerState));
+    async setPowerState(state: PowerState): Promise<boolean> {
+        if (!state || !PowerState[state]) {
+            throw new InvalidArgumentException(Object.keys(PowerState));
         }
         // Mock device communication
         await wait(300);
         this.state.powerState = state;
-        return state;
+        return true;
     }
 }
 
@@ -315,6 +361,8 @@ const MOCK_DEVICES: NetworkDevice[] = [
     },
 ];
 
+const DEVICE_CONNECTIONS: { [key: string]: SmartDevice } = {};
+
 export class DeviceHelper {
     async findDevices(): Promise<NetworkDevice[]> {
         await wait(5 * 1000);
@@ -322,25 +370,36 @@ export class DeviceHelper {
     }
 
     async getDeviceConnection(uuid: string): Promise<SmartDevice> {
-        // Mock device search on network
-        await wait(1000);
-        const nd = MOCK_DEVICES.find((el) => el.uuid === uuid);
-        if (!nd) {
-            throw new NetworkDeviceNotFoundException();
-        }
+        let sd: SmartDevice;
+        // Check if connection already exists
+        sd = DEVICE_CONNECTIONS[uuid];
 
-        // Mock connection establish attempt
-        await wait(1000);
-        switch (nd.type) {
-            case "AC":
-                return new SmartAC(nd);
-            case "Light":
-                return new SmartAC(nd);
-            case "TV":
-                return new SmartAC(nd);
-            default:
-                throw new UnknownDeviceException();
+        if (!sd) {
+            // Mock device validation on network
+            await wait(100);
+            const nd = MOCK_DEVICES.find((el) => el.uuid === uuid);
+            if (!nd) {
+                throw new NetworkDeviceNotFoundException();
+            }
+
+            // Mock connection establish attempt
+            await wait(100);
+            switch (nd.type) {
+                case "AC":
+                    sd = new SmartAC(nd);
+                    break;
+                case "Light":
+                    sd = new SmartLight(nd);
+                    break;
+                case "TV":
+                    sd = new SmartTV(nd);
+                    break;
+                default:
+                    throw new UnknownDeviceException();
+            }
+            DEVICE_CONNECTIONS[uuid] = sd;
         }
+        return sd;
     }
 }
 
