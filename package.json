@@ -22,10 +22,15 @@
     },
     "homepage": "https://github.com/krishanudey/permatech-assignment-backend#readme",
     "dependencies": {
-        "express": "^4.17.1"
+        "@hapi/joi": "17.1.1",
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "fs-extra": "^9.0.0"
     },
     "devDependencies": {
         "@types/express": "^4.17.6",
+        "@types/fs-extra": "^8.1.0",
+        "@types/hapi__joi": "^16.0.12",
         "@types/node": "^13.11.1",
         "cz-conventional-changelog": "^3.1.0",
         "tslint": "^6.1.1",
