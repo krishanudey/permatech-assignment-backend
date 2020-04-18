@@ -8,5 +8,6 @@ router.get("/", controller.getAllDevicesFromDb);
 router.get("/:uuid", controller.getDeviceByUuidFromDb);
 router.post("/", controller.addDeviceToDb);
 router.delete("/:uuid", controller.removeDeviceFromDb);
+router.put("/:uuid", controller.updateDeviceInDb);
 
 export const devicesRouter = router;
