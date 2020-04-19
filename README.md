@@ -39,9 +39,9 @@ Setup of this project is simple.
 
 ```
 [
-	{
+    {
         uuid:  "3a96dede-481e-4a54-992d-6f6580185902",
-	    ip:  "192.168.1.35",
+        ip:  "192.168.1.35",
         type:  "TV",
         servicePort:  80
         isAdded:  true,
@@ -58,15 +58,15 @@ Setup of this project is simple.
 
 ```
 [
-	{
-		name:  "Bedroom TV",
-		deviceMeta:  {
-			uuid:  "3a96dede-481e-4a54-992d-6f6580185902",
-			ip:  "192.168.1.35",
-			type:  "TV",
-			servicePort:  80
-		}
-	}
+    {
+        name:  "Bedroom TV",
+        deviceMeta:  {
+            uuid:  "3a96dede-481e-4a54-992d-6f6580185902",
+            ip:  "192.168.1.35",
+            type:  "TV",
+            servicePort:  80
+        }
+    }
 ]
 ```
 
@@ -83,13 +83,13 @@ Setup of this project is simple.
 
 ```
 {
-	name: "Bedroom TV",
-	deviceMeta: {
-		uuid:  "3a96dede-481e-4a54-992d-6f6580185902",
-		ip:  "192.168.1.35",
-		type:  "TV",
-		servicePort:  80
-	}
+    name: "Bedroom TV",
+    deviceMeta: {
+        uuid:  "3a96dede-481e-4a54-992d-6f6580185902",
+        ip:  "192.168.1.35",
+        type:  "TV",
+        servicePort:  80
+    }
 }
 ```
 
@@ -230,8 +230,8 @@ Setup of this project is simple.
 
 ```
 {
-	"action":"keyPress",
-	"args":"Mute"
+    "action":"keyPress",
+    "args":"Mute"
 }
 ```
 
@@ -262,27 +262,29 @@ true
 
 **Actions and Arguments**
 
--   To Set Volume  
-     - **action** : _setVolume_  
-     - **agrs** : number _(**Range** : 0 - 100)_
+-   To Set Volume
 
--   To Toggle Mute - **action** : _toggleMute_  
+    -   **action** : _setVolume_
+    -   **agrs** : number _(**Range** : 0 - 100)_
 
--   To Set Power State  
-     - **action** : _setPowerState_  
-     - **agrs** : string _(**Values** : \_ON_, _OFF_)\_
+-   To Toggle Mute - **action** : _toggleMute_
 
--   To Key Press  
-     - **action** : _keyPress_  
-     - **agrs** : string _(**Values** : \_Num1_, _Num2_, _Num3_, _Num4_, _Num5_, _Num6_, _Num7_, _Num8_, _Num9_, _Num0_, _VolumeUp_, _VolumeDown_, _Mute_, _Right_, _Left_, _Up_, _Down_, _ChannelUp_, _ChannelDown_, _Confirm_, _Return_, _Red_, _Green_, _Yellow_, _Blue_, _GGuide_, _Home_, _Rec_, _Tv_, _Rewind_, _Pause_, _Forward_, _TvPower_,)\_
+-   To Set Power State
+
+    -   **action** : _setPowerState_
+    -   **agrs** : string _(**Values** : \_ON_, _OFF_)\_
+
+-   To Key Press
+    -   **action** : _keyPress_
+    -   **agrs** : string _(**Values** : \_Num1_, _Num2_, _Num3_, _Num4_, _Num5_, _Num6_, _Num7_, _Num8_, _Num9_, _Num0_, _VolumeUp_, _VolumeDown_, _Mute_, _Right_, _Left_, _Up_, _Down_, _ChannelUp_, _ChannelDown_, _Confirm_, _Return_, _Red_, _Green_, _Yellow_, _Blue_, _GGuide_, _Home_, _Rec_, _Tv_, _Rewind_, _Pause_, _Forward_, _TvPower_,)\_
 
 **Status Object**
 
 ```
 {
-	"powerState": "ON",
-	"volume": 35,
-	"isMuted": false
+    "powerState": "ON",
+    "volume": 35,
+    "isMuted": false
 }
 ```
 
@@ -292,25 +294,27 @@ true
 
 **Actions and Arguments**
 
--   To Set Brightness  
-     - **action** : _setBrightness_  
-     - **agrs** : number _(**Range** : 0 - 100)_  
+-   To Set Brightness
 
--   To Set Color  
-     - **action** : _setColor_  
-     - **agrs** : string _(**Format** : Hex color string with leading #)_  
+    -   **action** : _setBrightness_
+    -   **agrs** : number _(**Range** : 0 - 100)_
 
--   To Set Power State  
-     - **action** : _setPowerState_  
-     - **agrs** : string _(**Values** : \_ON_, _OFF_)\_
+-   To Set Color
+
+    -   **action** : _setColor_
+    -   **agrs** : string _(**Format** : Hex color string with leading #)_
+
+-   To Set Power State
+    -   **action** : _setPowerState_
+    -   **agrs** : string _(**Values** : \_ON_, _OFF_)\_
 
 **Status Object**
 
 ```
 {
-	"powerState": "ON",
-	"brightness": 35,
-	"color": "#FFFFFF"
+    "powerState": "ON",
+    "brightness": 35,
+    "color": "#FFFFFF"
 }
 ```
 
@@ -320,35 +324,39 @@ true
 
 **Actions and Arguments**
 
--   To Set Temperature  
-     - **action** : _setTemperature_  
-     - **agrs** : number _(**Range** : 0 - 100)_  
+-   To Set Temperature
 
--   To Set Mode  
-     - **action** : _setMode_  
-     - **agrs** : string _(**Values** : \_COOL_, _FAN_, _HEAT_, _DRY_, _AUTO_)\_  
+    -   **action** : _setTemperature_
+    -   **agrs** : number _(**Range** : 0 - 100)_
 
--   To Set Fan Speed  
-     - **action** : _setFanSpeed_  
-     - **agrs** : string _(**Values** : \_HIGH_, _MEDIUM_, _LOW_, _AUTO_)\_  
+-   To Set Mode
 
--   To Set Swing  
-     - **action** : _setSwing_  
-     - **agrs** : string _(**Values** : \_S30_, _S45_, _S60_, _AUTO_, _OFF_)\_  
+    -   **action** : _setMode_
+    -   **agrs** : string _(**Values** : \_COOL_, _FAN_, _HEAT_, _DRY_, _AUTO_)\_
 
--   To Set Power State  
-     - **action** : _setPowerState_  
-     - **agrs** : string _(**Values** : \_ON_, _OFF_)\_
+-   To Set Fan Speed
+
+    -   **action** : _setFanSpeed_
+    -   **agrs** : string _(**Values** : \_HIGH_, _MEDIUM_, _LOW_, _AUTO_)\_
+
+-   To Set Swing
+
+    -   **action** : _setSwing_
+    -   **agrs** : string _(**Values** : \_S30_, _S45_, _S60_, _AUTO_, _OFF_)\_
+
+-   To Set Power State
+    -   **action** : _setPowerState_
+    -   **agrs** : string _(**Values** : \_ON_, _OFF_)\_
 
 **Status Object**
 
 ```
 {
-	"powerState": "ON",
-	"temp": 35,
-	"mode": "COOL",
-	"fanSpeed": "HIGH",
-	"swing": "S30"
+    "powerState": "ON",
+    "temp": 35,
+    "mode": "COOL",
+    "fanSpeed": "HIGH",
+    "swing": "S30"
 }
 ```
 
