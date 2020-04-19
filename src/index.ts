@@ -1,10 +1,11 @@
 import express from "express";
-import { AcMode } from "./service/device-helper";
 import bodyParser from "body-parser";
+import cors from "cors";
 import { devicesRouter } from "./routes/devices-info-router";
 import { actionsRouter } from "./routes/device-action-router";
 const app = express();
 const port = process.env.PORT || 8080;
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

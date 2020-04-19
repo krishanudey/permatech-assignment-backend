@@ -75,7 +75,7 @@ export class SmartAC extends SmartDevice {
             throw new OutOfRangeException(18, 32);
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.temp = temp;
         return true;
     }
@@ -85,7 +85,7 @@ export class SmartAC extends SmartDevice {
             throw new InvalidArgumentException(Object.keys(AcMode));
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.mode = mode;
         return true;
     }
@@ -95,7 +95,7 @@ export class SmartAC extends SmartDevice {
             throw new InvalidArgumentException(Object.keys(AcFanSpeed));
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.fanSpeed = speed;
         return true;
     }
@@ -105,7 +105,7 @@ export class SmartAC extends SmartDevice {
             throw new InvalidArgumentException(Object.keys(AcSwing));
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.swing = swing;
         return true;
     }
@@ -115,7 +115,7 @@ export class SmartAC extends SmartDevice {
             throw new InvalidArgumentException(Object.keys(PowerState));
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.powerState = state;
         return true;
     }
@@ -149,14 +149,14 @@ export class SmartTV extends SmartDevice {
             throw new OutOfRangeException(0, 100);
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.volume = vol;
         return true;
     }
 
     async toggleMute(): Promise<boolean> {
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.isMuted = !this.state.isMuted;
         return this.state.isMuted;
     }
@@ -166,7 +166,7 @@ export class SmartTV extends SmartDevice {
             throw new InvalidArgumentException(Object.keys(PowerState));
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.powerState = state;
         return true;
     }
@@ -192,7 +192,7 @@ export class SmartTV extends SmartDevice {
                 return true;
             default:
                 // Mock device communication
-                await wait(300);
+                await wait(50);
                 return true;
         }
     }
@@ -225,7 +225,7 @@ export class SmartLight extends SmartDevice {
             throw new OutOfRangeException(0, 100);
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.brightness = brightness;
         return true;
     }
@@ -235,7 +235,7 @@ export class SmartLight extends SmartDevice {
             throw new ArgumentFormatException(["Hex Color String"]);
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.color = color;
         return true;
     }
@@ -245,7 +245,7 @@ export class SmartLight extends SmartDevice {
             throw new InvalidArgumentException(Object.keys(PowerState));
         }
         // Mock device communication
-        await wait(300);
+        await wait(50);
         this.state.powerState = state;
         return true;
     }
@@ -354,8 +354,14 @@ const MOCK_DEVICES: NetworkDevice[] = [
         uuid: "0510bf58-3039-45e2-95c3-58c8fb202c28",
     },
     {
-        type: DeviceType.Light,
+        type: DeviceType.TV,
         ip: "192.168.1.39",
+        servicePort: 3030,
+        uuid: "3a96dede-481e-4a54-992d-6f6580785902",
+    },
+    {
+        type: DeviceType.Light,
+        ip: "192.168.1.40",
         servicePort: 3001,
         uuid: "65f6e76f-eac5-4cf5-82b6-95c9ae18c25f",
     },
@@ -365,7 +371,7 @@ const DEVICE_CONNECTIONS: { [key: string]: SmartDevice } = {};
 
 export class DeviceHelper {
     async findDevices(): Promise<NetworkDevice[]> {
-        await wait(5 * 1000);
+        await wait(2 * 1000);
         return MOCK_DEVICES;
     }
 
